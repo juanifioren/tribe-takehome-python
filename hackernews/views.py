@@ -135,7 +135,7 @@ def users(request: HttpRequest) -> HttpResponseBase:
         Item.objects.values(name=F("author"))
         .annotate(item_count=Count("author"))
         .annotate(score=Sum("score"))
-        .order_by("id")
+        .order_by('author')
     )
 
     paginator = Paginator(items_list, limit if limit else items_list.count())
