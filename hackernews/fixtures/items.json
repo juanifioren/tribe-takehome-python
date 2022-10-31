@@ -1,0 +1,50 @@
+[
+  {
+    "model": "hackernews.item",
+    "pk": 1,
+    "fields": {
+      "author": "abc",
+      "score": 200,
+      "time": "2021-06-07T19:39:42+00",
+      "title": "A good post",
+      "url": "https://neato.com/mid_post_url",
+      "type": "story"
+    }
+  },
+  {
+    "model": "hackernews.item",
+    "pk": 2,
+    "fields": {
+      "author": "cba",
+      "score": 300,
+      "time": "2021-06-08T19:39:42+00",
+      "title": "The coolest post",
+      "url": "https://neato.com/best_post_url",
+      "type": "story"
+    }
+  },
+  {
+    "model": "hackernews.item",
+    "pk": 3,
+    "fields": {
+      "author": "abc",
+      "score": 100,
+      "time": "2021-06-09T19:39:42+00",
+      "title": "The worst post",
+      "url": "https://neato.com/worst_post_url",
+      "type": "story"
+    }
+  },
+  {
+    "model": "hackernews.item",
+    "pk": 4,
+    "fields": {
+      "author": "abc",
+      "score": 150,
+      "time": "2021-06-10T19:39:42+00",
+      "title": "A bad post",
+      "url": "https://neato.com/bad_post_url",
+      "type": "story"
+    }
+  }
+]
