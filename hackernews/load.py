@@ -15,15 +15,17 @@ from hackernews.models import Item
 
 
 class ItemsType(Enum):
-    NEW = 'new'
-    TOP = 'top'
-    BEST = 'best'
+    NEW = "new"
+    TOP = "top"
+    BEST = "best"
 
 
 def get_item_from_hackernews(item_id):
     try:
-        api_response = requests.get(settings.HN_API_URL + 'item/{0}.json'.format(item_id))
-    except requests.exceptions.SSLError as e:
+        api_response = requests.get(
+            settings.HN_API_URL + "item/{0}.json".format(item_id)
+        )
+    except requests.exceptions.SSLError:
         return
 
     if api_response.ok:
@@ -31,7 +33,7 @@ def get_item_from_hackernews(item_id):
         return item_data
 
 
-@require_http_methods(['POST'])
+@require_http_methods(["POST"])
 def load_items_from_hackernews(request: HttpRequest) -> HttpResponseBase:
     """
     Accepts a POST request with Content-Type: application/json
@@ -54,16 +56,18 @@ def load_items_from_hackernews(request: HttpRequest) -> HttpResponseBase:
     try:
         data = json.loads(request.body) if request.body else {}  # load json POST data
     except json.JSONDecodeError:
-        return JsonResponse(data={'message': 'invalid data.'}, status=400)
+        return JsonResponse(data={"message": "invalid data."}, status=400)
 
-    if not data.get('type') in [t.value for t in ItemsType]:
-        return JsonResponse(data={'message': 'invalid or missing type.'}, status=400)
+    if not data.get("type") in [t.value for t in ItemsType]:
+        return JsonResponse(data={"message": "invalid or missing type."}, status=400)
 
-    limit = data.get('limit')
+    limit = data.get("limit")
     if limit and not isinstance(limit, int):
-        return JsonResponse(data={'message': 'invalid limit.'}, status=400)
+        return JsonResponse(data={"message": "invalid limit."}, status=400)
 
-    api_response = requests.get(settings.HN_API_URL + '{0}stories.json'.format(data['type']))
+    api_response = requests.get(
+        settings.HN_API_URL + "{0}stories.json".format(data["type"])
+    )
 
     if api_response.ok:
         items_ids = api_response.json()
@@ -83,14 +87,19 @@ def load_items_from_hackernews(request: HttpRequest) -> HttpResponseBase:
                 item_data = task.result()
                 if not item_data:
                     continue
-                obj, created = Item.objects.update_or_create(id=item_data['id'], defaults={
-                    'author': item_data['by'],
-                    'time': datetime.fromtimestamp(item_data['time'], pytz.timezone('UTC')),
-                    'score': item_data.get('score', ''),
-                    'title': item_data.get('title', ''),
-                    'url': item_data.get('url', ''),
-                    'type': item_data['type'],
-                })
+                obj, created = Item.objects.update_or_create(
+                    id=item_data["id"],
+                    defaults={
+                        "author": item_data["by"],
+                        "time": datetime.fromtimestamp(
+                            item_data["time"], pytz.timezone("UTC")
+                        ),
+                        "score": item_data.get("score", ""),
+                        "title": item_data.get("title", ""),
+                        "url": item_data.get("url", ""),
+                        "type": item_data["type"],
+                    },
+                )
                 saved_count += 1
 
-    return JsonResponse(data={'saved': saved_count}, status=200)
+    return JsonResponse(data={"saved": saved_count}, status=200)
