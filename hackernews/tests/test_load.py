@@ -69,7 +69,7 @@ class LoadTests(TestCase):
         self.assertEquals(response.json()["saved"], 3)
         in_db = Item.objects.all()
         self.assertEquals(len(in_db), 3)
-        self.assertEquals([i.id for i in in_db], [1, 2, 3])
+        self.assertEquals(sorted([i.id for i in in_db]), [1, 2, 3])
 
     def test_load_top_two(self, requests_get_mock):
         """
@@ -83,7 +83,7 @@ class LoadTests(TestCase):
         self.assertEquals(response.json()["saved"], 2)
         in_db = Item.objects.all()
         self.assertEquals(len(in_db), 2)
-        self.assertEquals([i.id for i in in_db], [1, 2])
+        self.assertEquals(sorted([i.id for i in in_db]), [1, 2])
 
     def test_load_best(self, requests_get_mock):
         """
@@ -95,7 +95,7 @@ class LoadTests(TestCase):
         self.assertEquals(response.json()["saved"], 4)
         in_db = Item.objects.all()
         self.assertEquals(len(in_db), 4)
-        self.assertEquals([i.id for i in in_db], [3, 4, 5, 6])
+        self.assertEquals(sorted([i.id for i in in_db]), [3, 4, 5, 6])
 
     def test_load_new(self, requests_get_mock):
         """
@@ -108,7 +108,7 @@ class LoadTests(TestCase):
         self.assertEquals(response.json()["saved"], 3)
         in_db = Item.objects.all()
         self.assertEquals(len(in_db), 3)
-        self.assertEquals([i.id for i in in_db], [7, 8, 9])
+        self.assertEquals(sorted([i.id for i in in_db]), [7, 8, 9])
 
     def test_load_top_and_best(self, requests_get_mock):
         """
@@ -125,4 +125,4 @@ class LoadTests(TestCase):
         self.assertEquals(response.json()["saved"], 4)
         in_db = Item.objects.all()
         self.assertEquals(len(in_db), 6)
-        self.assertEquals([i.id for i in in_db], [1, 2, 3, 4, 5, 6])
+        self.assertEquals(sorted([i.id for i in in_db]), [1, 2, 3, 4, 5, 6])
