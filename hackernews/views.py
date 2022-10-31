@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator, EmptyPage
 from django.forms import model_to_dict
 from django.http import HttpRequest
 from django.http.response import HttpResponseBase, JsonResponse
@@ -77,7 +78,29 @@ def items(request: HttpRequest) -> HttpResponseBase:
       }]
     }
     """
-    raise NotImplementedError("TODO: implement!")
+    try:
+        page = int(request.GET.get('page'))
+    except TypeError:
+        page = None
+
+    try:
+        limit = int(request.GET.get('limit'))
+    except TypeError:
+        limit = None
+
+    items_list = Item.objects.order_by('id').all()
+
+    paginator = Paginator(items_list, limit if limit else items_list.count())
+
+    try:
+        page = paginator.page(page if page else 1)
+    except EmptyPage:
+        return JsonResponse(data={'message': 'invalid page number'}, status=400)
+
+    return JsonResponse(data={
+        'next_page': page.next_page_number() if page.has_next() else None,
+        'items': [model_to_dict(item) for item in page.object_list],
+    }, status=200)
 
 
 def users(request: HttpRequest) -> HttpResponseBase:
